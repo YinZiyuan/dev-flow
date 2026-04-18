@@ -40,8 +40,8 @@ devflow-backend/
 │   ├── domain/        # 领域实体 (user, project, pipeline)
 │   ├── engine/        # Pipeline 状态机 + Stage 执行器
 │   ├── realtime/      # WebSocket 事件推送
-│   ├── ai/            # Claude API 客户端 (待实现)
-│   └── sandbox/       # Docker 测试沙箱 (待实现)
+│   ├── ai/            # Claude API 流式客户端
+│   └── sandbox/       # Docker 测试沙箱
 ├── src/main/resources/db/migration/  # Flyway 迁移
 └── docker-compose.yml
 ```
@@ -55,9 +55,10 @@ devflow-backend/
 - [x] Pipeline 领域实体 (Task 5)
 - [x] 状态机引擎 (Task 6)
 - [x] REST API + Human-in-the-Loop (Task 7)
-- [ ] Claude AI 客户端 (Task 8)
-- [ ] Stage 执行器 (Task 9-11)
-- [ ] Agent 配置 API (Task 12)
+- [x] Claude AI 客户端 (Task 8)
+- [x] Stage 执行器 — 需求/规划/编码/测试 (Task 9-11)
+- [x] Agent 配置 API + 全局异常处理 (Task 12)
+- [ ] 前端对接 (Phase 2)
 
 ## 文档
 
