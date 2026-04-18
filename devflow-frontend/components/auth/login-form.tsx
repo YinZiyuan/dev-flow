@@ -51,6 +51,22 @@ export function LoginForm({ onLogin }: LoginFormProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full"
+            onClick={() => onLogin('dev@devflow.local', '000000')}
+          >
+            开发模式：跳过登录
+          </Button>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">或</span>
+            </div>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="email">邮箱</Label>
             <div className="flex gap-2">
