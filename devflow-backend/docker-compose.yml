@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: devflow
+      POSTGRES_USER: devflow
+      POSTGRES_PASSWORD: devflow
+    ports:
+      - "5433:5432"
+    volumes:
+      - devflow_data:/var/lib/postgresql/data
+
+volumes:
+  devflow_data:
