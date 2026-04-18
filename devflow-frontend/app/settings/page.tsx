@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AgentConfig } from '@/types';
 
 const stageNames: Record<string, string> = {
@@ -35,11 +35,14 @@ function AgentConfigCard({ config }: { config: AgentConfig }) {
         maxTokens,
         maxRetries,
       }),
-    onSuccess: () => {
+  });
+
+  useEffect(() => {
+    if (updateMutation.isSuccess) {
       queryClient.invalidateQueries({ queryKey: ['agent-configs'] });
       setEditing(false);
-    },
-  });
+    }
+  }, [updateMutation.isSuccess, queryClient]);
 
   return (
     <Card>

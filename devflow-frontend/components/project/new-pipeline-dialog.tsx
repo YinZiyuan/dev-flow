@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -27,13 +27,16 @@ export function NewPipelineDialog({ projectId }: NewPipelineDialogProps) {
 
   const createMutation = useMutation({
     mutationFn: (req: string) => pipelineApi.create(projectId, { requirement: req }),
-    onSuccess: (data) => {
+  });
+
+  useEffect(() => {
+    if (createMutation.isSuccess && createMutation.data) {
       queryClient.invalidateQueries({ queryKey: ['pipelines', projectId] });
       setOpen(false);
       setRequirement('');
-      router.push(`/runs/${data.id}`);
-    },
-  });
+      router.push(`/runs/${createMutation.data.id}`);
+    }
+  }, [createMutation.isSuccess, createMutation.data, queryClient, projectId, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

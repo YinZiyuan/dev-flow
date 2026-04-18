@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,40 +21,52 @@ export function ActionBar({ stage }: ActionBarProps) {
 
   const answerMutation = useMutation({
     mutationFn: (content: string) => stageApi.answer(stage.id, { content }),
-    onSuccess: () => {
-      setAnswer('');
-      clearStreamText();
-      queryClient.invalidateQueries({ queryKey: ['messages', stage.id] });
-      queryClient.invalidateQueries({ queryKey: ['stages'] });
-    },
   });
 
   const chooseMutation = useMutation({
     mutationFn: (optionId: string) => stageApi.choose(stage.id, { optionId }),
-    onSuccess: () => {
-      clearStreamText();
-      queryClient.invalidateQueries({ queryKey: ['messages', stage.id] });
-      queryClient.invalidateQueries({ queryKey: ['stages'] });
-    },
   });
 
   const approveMutation = useMutation({
     mutationFn: () => stageApi.approve(stage.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stages'] });
-      queryClient.invalidateQueries({ queryKey: ['pipeline'] });
-    },
   });
 
   const reviseMutation = useMutation({
     mutationFn: (fb: string) => stageApi.revise(stage.id, { feedback: fb }),
-    onSuccess: () => {
+  });
+
+  useEffect(() => {
+    if (answerMutation.isSuccess) {
+      setAnswer('');
+      clearStreamText();
+      queryClient.invalidateQueries({ queryKey: ['messages', stage.id] });
+      queryClient.invalidateQueries({ queryKey: ['stages'] });
+    }
+  }, [answerMutation.isSuccess, queryClient, stage.id, clearStreamText]);
+
+  useEffect(() => {
+    if (chooseMutation.isSuccess) {
+      clearStreamText();
+      queryClient.invalidateQueries({ queryKey: ['messages', stage.id] });
+      queryClient.invalidateQueries({ queryKey: ['stages'] });
+    }
+  }, [chooseMutation.isSuccess, queryClient, stage.id, clearStreamText]);
+
+  useEffect(() => {
+    if (approveMutation.isSuccess) {
+      queryClient.invalidateQueries({ queryKey: ['stages'] });
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] });
+    }
+  }, [approveMutation.isSuccess, queryClient]);
+
+  useEffect(() => {
+    if (reviseMutation.isSuccess) {
       setFeedback('');
       clearStreamText();
       queryClient.invalidateQueries({ queryKey: ['messages', stage.id] });
       queryClient.invalidateQueries({ queryKey: ['stages'] });
-    },
-  });
+    }
+  }, [reviseMutation.isSuccess, queryClient, stage.id, clearStreamText]);
 
   const lastMessage = messages[messages.length - 1];
   let choiceOptions: ChoiceOption[] = [];
