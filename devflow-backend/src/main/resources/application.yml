@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/devflow
+    username: devflow
+    password: devflow
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:devflow-secret-key-change-in-production-minimum-32-chars}
+    expiration-ms: 86400000  # 24h
+  claude:
+    api-key: ${CLAUDE_API_KEY:}
+    model: claude-opus-4-7
+    max-tokens: 8192
+  verification-code:
+    expiration-minutes: 10
