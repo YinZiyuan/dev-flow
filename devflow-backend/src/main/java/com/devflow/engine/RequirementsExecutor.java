@@ -6,12 +6,13 @@ import com.devflow.domain.pipeline.model.*;
 import com.devflow.domain.pipeline.model.StageRun.StageStatus;
 import com.devflow.domain.pipeline.repository.*;
 import com.devflow.realtime.EventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RequirementsExecutor extends BaseStageExecutor {
 
-    public RequirementsExecutor(ClaudeClient c, ContextBuilder cb, PipelineEngine e,
+    public RequirementsExecutor(ClaudeClient c, ContextBuilder cb, @Lazy PipelineEngine e,
             MessageRepository mr, ArtifactRepository ar, AgentConfigRepository acr, EventPublisher ep) {
         super(c, cb, e, mr, ar, acr, ep);
     }

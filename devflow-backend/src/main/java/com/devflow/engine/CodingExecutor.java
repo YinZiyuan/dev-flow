@@ -6,6 +6,7 @@ import com.devflow.domain.pipeline.model.*;
 import com.devflow.domain.pipeline.model.StageRun.StageStatus;
 import com.devflow.domain.pipeline.repository.*;
 import com.devflow.realtime.EventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -18,7 +19,7 @@ public class CodingExecutor extends BaseStageExecutor {
 
     private final CodeFileRepository codeFileRepository;
 
-    public CodingExecutor(ClaudeClient c, ContextBuilder cb, PipelineEngine e,
+    public CodingExecutor(ClaudeClient c, ContextBuilder cb, @Lazy PipelineEngine e,
             MessageRepository mr, ArtifactRepository ar, AgentConfigRepository acr,
             EventPublisher ep, CodeFileRepository cfr) {
         super(c, cb, e, mr, ar, acr, ep);

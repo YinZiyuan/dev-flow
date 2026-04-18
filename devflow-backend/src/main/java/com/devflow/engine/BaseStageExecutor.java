@@ -8,14 +8,14 @@ import com.devflow.domain.pipeline.repository.*;
 import com.devflow.realtime.EventPublisher;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j @RequiredArgsConstructor
+@Slf4j
 public abstract class BaseStageExecutor implements StageExecutor {
 
     protected final ClaudeClient claudeClient;
@@ -26,6 +26,19 @@ public abstract class BaseStageExecutor implements StageExecutor {
     protected final AgentConfigRepository agentConfigRepository;
     protected final EventPublisher eventPublisher;
     protected final ObjectMapper mapper = new ObjectMapper();
+
+    protected BaseStageExecutor(ClaudeClient claudeClient, ContextBuilder contextBuilder,
+                                 @Lazy PipelineEngine pipelineEngine,
+                                 MessageRepository messageRepository, ArtifactRepository artifactRepository,
+                                 AgentConfigRepository agentConfigRepository, EventPublisher eventPublisher) {
+        this.claudeClient = claudeClient;
+        this.contextBuilder = contextBuilder;
+        this.pipelineEngine = pipelineEngine;
+        this.messageRepository = messageRepository;
+        this.artifactRepository = artifactRepository;
+        this.agentConfigRepository = agentConfigRepository;
+        this.eventPublisher = eventPublisher;
+    }
 
     @Override
     @Transactional

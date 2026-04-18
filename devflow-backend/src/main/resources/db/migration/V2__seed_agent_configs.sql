@@ -66,4 +66,5 @@ Rules:
 - Provide COMPLETE file content (not diffs).
 - If all tests passed, output: {"type":"all_passed"}
 - Fix the minimal set of files needed.',
-'claude-opus-4-6', 8192, 3);
+'claude-opus-4-6', 8192, 3)
+ON CONFLICT (stage_type) DO NOTHING;

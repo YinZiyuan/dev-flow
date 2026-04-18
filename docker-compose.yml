@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: devflow
+      POSTGRES_USER: devflow
+      POSTGRES_PASSWORD: devflow
+    volumes:
+      - devflow_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devflow -d devflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - devflow
+
+  backend:
+    build:
+      context: ./devflow-backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/devflow
+      SPRING_DATASOURCE_USERNAME: devflow
+      SPRING_DATASOURCE_PASSWORD: devflow
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+      APP_JWT_SECRET: ${JWT_SECRET:-devflow-secret-key-change-in-production-minimum-32-chars}
+      APP_JWT_EXPIRATION_MS: 86400000
+      APP_CLAUDE_API_KEY: ${CLAUDE_API_KEY:-}
+      APP_CLAUDE_MODEL: ${CLAUDE_MODEL:-claude-opus-4-7}
+      APP_CLAUDE_MAX_TOKENS: ${CLAUDE_MAX_TOKENS:-8192}
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - devflow
+
+  frontend:
+    build:
+      context: ./devflow-frontend
+      dockerfile: Dockerfile
+    environment:
+      BACKEND_URL: http://backend:8080
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - devflow
+
+volumes:
+  devflow_data:
+
+networks:
+  devflow:
+    driver: bridge
